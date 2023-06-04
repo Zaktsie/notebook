@@ -1,6 +1,6 @@
 # zak-notepad
 
-> A simple notepad app written in Vue js and utilizing Google Firebase
+> A simple notepad app written in Vue js and utilizing Google Firebase realtime database and Google Authentication
 
 ## Build Setup
 
