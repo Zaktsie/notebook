@@ -1,11 +1,11 @@
 <template>
   <div class="notebook">
-      <ul>
-          <li v-for="(page, index) of pages" class="page" v-bind:class="{ 'active': index === activePage }" @click="changePage(index)" v-bind:key="index">
-              <div>{{page.title}}</div>
-          </li>
-          <li class="new-page" @click="newPage()">New Page +</li>
-      </ul>
+    <ul>
+      <li v-for="(page, index) of pages" class="page" :class="{ 'active': index === activePage }" @click="changePage(index)" :key="index">
+        <div>{{ page.title }}</div>
+      </li>
+      <li class="new-page" @click="newPage()">New Page +</li>
+    </ul>
   </div>
 </template>
 
@@ -14,14 +14,14 @@ export default {
   name: "Notebook",
   props: ["pages", "activePage"],
   methods: {
-    changePage (index) {
-      this.$emit("change-page", index)
+    changePage(index) {
+      this.$emit("change-page", index);
     },
-    newPage () {
-      this.$emit("new-page")
+    newPage() {
+      this.$emit("new-page");
     }
   }
-}
+};
 </script>
 
 <style scoped>

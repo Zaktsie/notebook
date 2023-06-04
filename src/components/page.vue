@@ -1,33 +1,34 @@
 <template>
   <div class="page">
-      <div v-if="page">
-          <label for="title">Title</label>
-          <input type="text" v-model="page.title" class="title" name="title" placeholder="Enter a title" />
-          <label for="content">Content</label>
-          <textarea class="content" name="content" v-model="page.content" placeholder="Enter some content"></textarea>
-          <button @click="deletePage()">Delete Page</button>
-          <button @click="savePage()">Save Page</button>
-      </div>
-      <div v-else>
-          <h1>&larr; To start, create a new page!</h1>
-      </div>
+    <div v-if="page">
+      <label for="title">Title</label>
+      <input type="text" v-model="page.title" class="title" name="title" placeholder="Enter a title" />
+      <label for="content">Content</label>
+      <textarea class="content" name="content" v-model="page.content" placeholder="Enter some content"></textarea>
+      <button @click="deletePage()">Delete Page</button>
+      <button @click="savePage()">Save Page</button>
+    </div>
+    <div v-else>
+      <h1>&larr; To start, create a new page!</h1>
+    </div>
   </div>
 </template>
 
 <script>
-export default{
+export default {
   name: "Page",
   props: ["page"],
   methods: {
-    deletePage () {
-      this.$emit("delete-page")
+    deletePage() {
+      this.$emit("delete-page");
     },
-    savePage () {
-      this.$emit("save-page")
+    savePage() {
+      this.$emit("save-page");
     }
   }
-}
+};
 </script>
+
 
 <style scoped>
   .page {
