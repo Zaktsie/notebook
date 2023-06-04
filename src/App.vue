@@ -1,14 +1,23 @@
 <template>
   <div id="app">
-    <Notebook @change-page="changePage" @new-page="newPage" :pages="pages" :activePage="index" />
-    <Page @save-page="savePage" @delete-page="deletePage" :page="pages[index]" />
+    <div v-if="user">
+      <button @click="logout">Logout</button>
+      <Notebook @change-page="changePage" @new-page="newPage" :pages="pages" :activePage="index" />
+      <Page @save-page="savePage" @delete-page="deletePage" :page="pages[index]" />
+    </div>
+    <div v-else>
+      <button @click="login">Login with Google</button>
+    </div>
   </div>
 </template>
+
 
 <script>
 import Notebook from './components/Notebook'
 import Page from './components/Page'
-import Firebase from 'firebase'
+import Firebase from 'firebase/app'
+import 'firebase/auth'
+import 'firebase/database'
 
 
 const database = Firebase.initializeApp({
@@ -28,6 +37,7 @@ const database = Firebase.initializeApp({
   },
   data() {
     return {
+      user: null,
       pages: [],
       index: 0
     };
@@ -43,7 +53,51 @@ const database = Firebase.initializeApp({
       });
     });
   },
+  created() {
+    Firebase.auth().onAuthStateChanged((user) => {
+      this.user = user;
+    });
+    this.fetchPages();
+  },
   methods: {
+    async login() {
+  const provider = new Firebase.auth.GoogleAuthProvider();
+  try {
+    await Firebase.auth().signInWithPopup(provider);
+  } catch (error) {
+    if (error.code === "auth/popup-closed-by-user") {
+      // Handle popup closed by user error
+      console.log("Login cancelled by the user");
+    } else {
+      // Handle other authentication errors
+      console.error(error);
+    }
+  }
+},
+    async logout() {
+      try {
+        await Firebase.auth().signOut();
+        this.user = null;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    fetchPages() {
+      const userId = this.user ? this.user.uid : '';
+      Firebase
+        .database()
+        .ref(`users/${userId}/pages`)
+        .on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            this.pages = Object.values(data);
+          } else {
+            this.pages = [];
+          }
+        });
+    },
+
+
     newPage() {
       this.pages.push({
         title: "",
